@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sudoku Game</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .fade-in {
+      animation: fadeIn 0.5s ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-gray-900 to-gray-800 min-h-screen flex items-center justify-center text-white font-sans">
+  <div class="container mx-auto p-4">
+    <h1 class="text-4xl font-bold text-center mb-8 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">Sudoku Game</h1>
+    
+    <!-- Sudoku Grid Container -->
+    <div id="sudoku-grid" class="grid grid-cols-9 gap-1 mx-auto w-fit border-2 border-gray-700 rounded-lg p-2 bg-gray-800 shadow-lg">
+      <!-- Grid will be dynamically inserted here -->
+    </div>
+
+    <!-- Buttons -->
+    <div class="flex justify-center mt-8 space-x-4">
+      <button onclick="solveSudoku()" class="px-6 py-2 bg-gradient-to-r from-blue-500 to-teal-500 text-white font-semibold rounded-lg hover:from-teal-500 hover:to-blue-500 transition-all duration-300 ease-in-out transform hover:scale-105">
+        Solve
+      </button>
+      <button onclick="resetGrid()" class="px-6 py-2 bg-gradient-to-r from-red-500 to-orange-500 text-white font-semibold rounded-lg hover:from-orange-500 hover:to-red-500 transition-all duration-300 ease-in-out transform hover:scale-105">
+        Reset
+      </button>
+    </div>
+
+    <!-- Solution Grid Container -->
+    <div id="solution-grid" class="grid grid-cols-9 gap-1 mx-auto w-fit border-2 border-gray-700 rounded-lg p-2 bg-gray-800 shadow-lg mt-8 hidden">
+      <!-- Solution will be dynamically inserted here -->
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    const gridContainer = document.getElementById('sudoku-grid');
+    const solutionContainer = document.getElementById('solution-grid');
+
+    // Generate 9x9 Sudoku Grid
+    for (let row = 0; row < 9; row++) {
+      for (let col = 0; col < 9; col++) {
+        // Create a cell
+        const cell = document.createElement('div');
+        cell.className = 'w-12 h-12 flex items-center justify-center border border-gray-700 bg-gray-900 hover:bg-gray-700 transition-all duration-300 ease-in-out transform hover:scale-105 fade-in';
+        
+        // Create an input field
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.maxLength = 1;
+        input.className = 'w-full h-full text-center bg-transparent text-white focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md';
+        
+        // Append input to cell and cell to grid
+        cell.appendChild(input);
+        gridContainer.appendChild(cell);
+      }
+    }
+
+    // Sudoku Solver Function
+    function solveSudoku() {
+      // Get the current grid values
+      const grid = [];
+      const inputs = gridContainer.querySelectorAll('input');
+      inputs.forEach((input, index) => {
+        const row = Math.floor(index / 9);
+        const col = index % 9;
+        if (!grid[row]) grid[row] = [];
+        grid[row][col] = input.value ? parseInt(input.value) : 0;
+      });
+
+      // Solve the Sudoku
+      if (solve(grid)) {
+        // Display the solution
+        displaySolution(grid);
+      } else {
+        alert("No solution exists for this Sudoku puzzle!");
+      }
+    }
+
+    // Backtracking Sudoku Solver
+    function solve(grid) {
+      for (let row = 0; row < 9; row++) {
+        for (let col = 0; col < 9; col++) {
+          if (grid[row][col] === 0) {
+            for (let num = 1; num <= 9; num++) {
+                if (isValid(grid, row, col, num)) {
+                  grid[row][col] = num;
+                  if (solve(grid)) {
+                    return true;
+                  }
+                  grid[row][col] = 0; // Backtrack
+                }
+              }
+              return false; // No valid number found
+            }
+          }
+        }
+      return true; // Solved
+    }
+
+    // Check if a number can be placed in a cell
+    function isValid(grid, row, col, num) {
+      for (let i = 0; i < 9; i++) {
+        if (grid[row][i] === num || grid[i][col] === num || grid[Math.floor(row / 3) * 3 + Math.floor(i / 3)][Math.floor(col / 3) * 3 + i % 3] === num) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    // Display the solution in the solution grid
+    function displaySolution(grid) {
+      solutionContainer.classList.remove('hidden');
+      solutionContainer.innerHTML = ''; // Clear previous solution
+      for (let row = 0; row < 9; row++) {
+        for (let col = 0; col < 9; col++) {
+          const cell = document.createElement('div');
+          cell.className = 'w-12 h-12 flex items-center justify-center border border-gray-700 bg-gray-900 text-white';
+          cell.textContent = grid[row][col];
+          solutionContainer.appendChild(cell);
+        }
+      }
+    }
+
+    // Reset the grid
+    function resetGrid() {
+      const inputs = gridContainer.querySelectorAll('input');
+      inputs.forEach(input => input.value = '');
+      solutionContainer.classList.add('hidden');
+      solutionContainer.innerHTML = ''; // Clear previous solution
+    }
+  </script>
+</body>
+</html>
