@@ -64,4 +64,3 @@ This project is licensed under the MIT License. Feel free to use and modify it a
 - **JavaScript**: For handling the logic to generate the grid, solve the puzzle, and reset the game.
 
 Enjoy solving Sudoku!
-```
