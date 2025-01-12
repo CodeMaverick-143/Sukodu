@@ -1,6 +1,6 @@
 # Sudoku Game
 
-This is a simple interactive Sudoku game built with HTML, CSS, and JavaScript. It features a dynamically generated 9x9 Sudoku grid and provides functionality to solve the puzzle using a backtracking algorithm, as well as reset the grid. The design is enhanced using Tailwind CSS for modern UI styling and smooth animations.
+This is a simple interactive Sudoku game built with HTML, CSS, and JavaScript. It features a dynamically generated 9x9 Sudoku grid and provides functionality to solve the puzzle using a backtracking algorithm, as well as reset the grid. The design is enhanced using Tailwind CSS for modern UI styling and smooth animations......
 
 ## Features
 
